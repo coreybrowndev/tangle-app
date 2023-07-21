@@ -1,0 +1,57 @@
+@import "../../sass/variables";
+
+.thread-wrapper {
+  width: 100%;
+  display: flex;
+  padding-bottom: 2em;
+
+  .img-wrapper {
+    width: 12%;
+
+    img {
+      width: 100%;
+      border-radius: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .thread-container {
+    width: 100%;
+    padding-left: 0.5em;
+    border-bottom: 1px solid $dark-gray-color;
+
+    .thread-header-wrapper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
+
+      .thread-action-options {
+        display: flex;
+        align-items: flex-start;
+
+        p {
+          margin: 0;
+          padding-right: 1em;
+        }
+      }
+    }
+
+    .thread-body {
+    }
+
+    .interaction-options {
+      display: flex;
+      gap: 10px;
+      .icon {
+        cursor: pointer;
+      }
+    }
+
+    .interaction-status {
+      display: flex;
+      gap: 5px;
+      color: $dark-gray-color;
+    }
+  }
+}
