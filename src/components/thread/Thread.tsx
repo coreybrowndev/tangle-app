@@ -1,5 +1,7 @@
 import React from "react";
 import "./threadStyles.scss";
+import { ThreadData } from "../../types";
+
 import {
   MoreHorizontal,
   Heart,
@@ -8,7 +10,11 @@ import {
   Send,
 } from "react-feather";
 
-const Thread: React.FC = () => {
+interface ThreadProps {
+  thread: ThreadData;
+}
+
+const Thread: React.FC<ThreadProps> = ({ thread }) => {
   return (
     <div className={"thread-wrapper"}>
       <div className="img-wrapper">
@@ -16,16 +22,14 @@ const Thread: React.FC = () => {
       </div>
       <div className="thread-container">
         <div className="thread-header-wrapper">
-          <strong>Test Bob</strong>
+          <strong>{thread.owner_id}</strong>
           <div className="thread-action-options">
             <p>5h</p>
             <MoreHorizontal />
           </div>
         </div>
         <div className="thread-body">
-          <p>
-            Day 2 is Over. <br /> <br /> See you tomorrow??
-          </p>
+          <p>{thread.body}</p>
         </div>
         <div className="interaction-options">
           <Heart className="icon" />
