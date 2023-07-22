@@ -1,7 +1,7 @@
-import React from "react";
 import "./threadStyles.scss";
 import { ThreadData } from "../../types";
-
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
 import {
   MoreHorizontal,
   Heart,
@@ -9,22 +9,30 @@ import {
   Repeat,
   Send,
 } from "react-feather";
+import ReactTimeAgo from "react-time-ago";
 
 interface ThreadProps {
   thread: ThreadData;
 }
 
 const Thread: React.FC<ThreadProps> = ({ thread }) => {
+  const seconds = thread.created_time["seconds"];
+  const nanoseconds = thread.created_time["nanoseconds"];
+  const timestamp: number = (seconds + nanoseconds / 1000000000) * 1000;
+  const date = new Date(timestamp);
+
+  TimeAgo.addDefaultLocale(en);
+
   return (
     <div className={"thread-wrapper"}>
       <div className="img-wrapper">
-        <img src="https://avatars.githubusercontent.com/u/100534355?s=400&u=1f756db747d8b9ad45cdbd59558429f5dab85213&v=4" />
+        <img src={thread.image} />
       </div>
       <div className="thread-container">
         <div className="thread-header-wrapper">
-          <strong>{thread.owner_id}</strong>
+          <strong>{thread.user["user_name"]}</strong>
           <div className="thread-action-options">
-            <p>5h</p>
+            <p>{<ReactTimeAgo date={date} locale="en-US" />}</p>
             <MoreHorizontal />
           </div>
         </div>

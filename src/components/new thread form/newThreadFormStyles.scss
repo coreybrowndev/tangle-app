@@ -1,0 +1,38 @@
+@import "../../sass/variables";
+
+.new-thread-form-wrapper {
+  margin-bottom: 2rem;
+  padding-bottom: 1.2em;
+  border-bottom: 1px solid $dark-gray-color;
+
+  form {
+    width: 100%;
+    textarea {
+      resize: none;
+      width: 100%;
+      font-family: inherit;
+      box-sizing: border-box;
+      padding: 0.9em;
+      border-radius: 1em;
+      background: rgba(29, 29, 29, 1);
+      border: none;
+      margin-bottom: 0.4em;
+      caret-color: #5facff;
+    }
+
+    .new-thread-action-items {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      button {
+        padding: 0.5em;
+        background: transparent;
+        color: #5facff;
+        border: none;
+        border-radius: 0.3em;
+        font-size: 0.8em;
+      }
+    }
+  }
+}
