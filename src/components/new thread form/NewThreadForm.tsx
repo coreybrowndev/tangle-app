@@ -1,18 +1,25 @@
-import { SyntheticEvent, useContext, useState, useRef } from "react";
+import { SyntheticEvent, useContext, useState, useRef, useEffect } from "react";
 import "./newThreadFormStyles.scss";
 import { Image } from "react-feather";
 import { db, storage } from "../../config/firebase-config";
 import { addDoc, collection } from "firebase/firestore";
 import { ThreadContext } from "../../context/ThreadContext";
-import { ref, uploadBytes } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  list,
+  getDownloadURL,
+  getStorage,
+} from "firebase/storage";
 import { v4 } from "uuid";
+import firebase from "firebase/compat/app";
 
 const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
   const { getThreads } = useContext(ThreadContext);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   const threadsCollection = collection(db, "threads");
-
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleThreadSubmit = async (e: SyntheticEvent) => {
@@ -21,11 +28,12 @@ const NewThreadForm: React.FC = () => {
       await addDoc(threadsCollection, {
         body: threadBody,
         created_time: new Date(),
-        image: "",
+        image: imageUrl,
         owner_id: "D3dUfQaMH3c52nURgKLbtsdV3C53",
         likes_count: 0,
       });
       setThreadBody("");
+      setImageUrl("");
       getThreads();
     } catch (err) {
       console.error(err);
@@ -39,11 +47,13 @@ const NewThreadForm: React.FC = () => {
       return;
     }
 
-    console.log(fileObj);
-
-    const storageRef = ref(storage, `/${fileObj.name + v4()}`);
-    uploadBytes(storageRef, fileObj).then(() => {
+    const storageRef = ref(storage, `/images/${fileObj.name + v4()}`);
+    uploadBytes(storageRef, fileObj).then(async () => {
       alert("Image Uploaded");
+
+      const imageRef = ref(storage, storageRef.fullPath);
+      const imageUrl = await getDownloadURL(imageRef);
+      setImageUrl(imageUrl);
     });
   };
 
@@ -63,6 +73,8 @@ const NewThreadForm: React.FC = () => {
           value={threadBody}
           onChange={(e) => setThreadBody(e.target.value)}
         ></textarea>
+
+        {<img className="uploaded-new-thread-image" src={imageUrl} />}
         <div className="new-thread-action-items">
           <button type="submit">Post</button>
           <input
