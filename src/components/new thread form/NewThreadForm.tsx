@@ -1,15 +1,13 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 import "./newThreadFormStyles.scss";
 import { Image } from "react-feather";
 import { db } from "../../config/firebase-config";
 import { addDoc, collection } from "firebase/firestore";
+import { ThreadContext } from "../../context/ThreadContext";
 
-interface NewThreadFormProps {
-  renderThreads: () => {};
-}
-
-const NewThreadForm: React.FC<NewThreadFormProps> = ({ renderThreads }) => {
+const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
+  const { getThreads } = useContext(ThreadContext);
 
   const threadsCollection = collection(db, "threads");
 
@@ -24,7 +22,7 @@ const NewThreadForm: React.FC<NewThreadFormProps> = ({ renderThreads }) => {
         owner_id: "D3dUfQaMH3c52nURgKLbtsdV3C53",
       });
       setThreadBody("");
-      renderThreads();
+      getThreads();
     } catch (err) {
       console.error(err);
     }
@@ -33,17 +31,18 @@ const NewThreadForm: React.FC<NewThreadFormProps> = ({ renderThreads }) => {
   return (
     <div className="new-thread-form-wrapper">
       <form onSubmit={handleThreadSubmit}>
-        <textarea
-          required
-          name="body"
-          rows={3}
-          placeholder="Start a Thread..."
-          value={threadBody}
-          onChange={(e) => setThreadBody(e.target.value)}
-        ></textarea>
+        <div className="user-textarea-action-item-wraper">
+          <textarea
+            required
+            name="body"
+            placeholder="Start a Thread..."
+            value={threadBody}
+            onChange={(e) => setThreadBody(e.target.value)}
+          ></textarea>
+          <Image />
+        </div>
 
         <div className="new-thread-action-items">
-          <Image />
           <button type="submit">Post</button>
         </div>
       </form>
