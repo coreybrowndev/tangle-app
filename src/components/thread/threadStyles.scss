@@ -43,6 +43,13 @@
     }
 
     .thread-body {
+      white-space: pre-wrap;
+      .imported-thread-image {
+        border-radius: 1em;
+        box-sizing: border-box;
+        object-fit: cover;
+        border: 1px solid rgba(49, 49, 50, 1);
+      }
     }
 
     .interaction-options {

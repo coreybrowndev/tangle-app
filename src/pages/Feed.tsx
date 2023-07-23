@@ -16,10 +16,6 @@ import { ThreadContext } from "../context/ThreadContext";
 const Feed: React.FC = () => {
   const { threadsList } = useContext(ThreadContext);
 
-  useEffect(() => {
-    console.log("This is threads List: ", threadsList);
-  }, []);
-
   return (
     <div className="main--container">
       <NewThreadForm />

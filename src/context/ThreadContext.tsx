@@ -35,6 +35,10 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
     getThreads();
   }, []);
 
+  useEffect(() => {
+    console.log("THREAD LIST!", threadsList);
+  }, []);
+
   const getThreads = async () => {
     try {
       const getDataInDescendingOrder = query(
@@ -51,7 +55,7 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
       const threadsWithUserPromises = threadsData.map(async (thread) => {
         const userDoc = await getDoc(doc(db, "users", thread.owner_id));
         const userData = userDoc.exists()
-          ? (userDoc.data() as { user_name: string })
+          ? (userDoc.data() as { user_name: string; image: string })
           : null;
         return {
           ...thread,

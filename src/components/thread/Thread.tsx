@@ -10,10 +10,13 @@ import {
   Send,
 } from "react-feather";
 import ReactTimeAgo from "react-time-ago";
+import ActionMenu from "../action menu/ActionMenu";
 
 interface ThreadProps {
   thread: ThreadData;
 }
+
+TimeAgo.addDefaultLocale(en);
 
 const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const seconds = thread.created_time["seconds"];
@@ -21,23 +24,25 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const timestamp: number = (seconds + nanoseconds / 1000000000) * 1000;
   const date = new Date(timestamp);
 
-  TimeAgo.addDefaultLocale(en);
-
   return (
     <div className={"thread-wrapper"}>
       <div className="img-wrapper">
-        <img src={thread.image} />
+        <img src={thread.user["image"]} />
       </div>
       <div className="thread-container">
         <div className="thread-header-wrapper">
           <strong>{thread.user["user_name"]}</strong>
           <div className="thread-action-options">
             <p>{<ReactTimeAgo date={date} locale="en-US" />}</p>
-            <MoreHorizontal />
+            <ActionMenu thread={thread} />
           </div>
         </div>
         <div className="thread-body">
           <p>{thread.body}</p>
+
+          {thread.image && (
+            <img className="imported-thread-image" src={thread.image} />
+          )}
         </div>
         <div className="interaction-options">
           <Heart className="icon" />
@@ -46,9 +51,9 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
           <Send className="icon" />
         </div>
         <div className="interaction-status">
-          <p>5 replies</p>
+          <p>15 replies</p>
           <p>•</p>
-          <p>15 likes</p>
+          <p>{thread.likes_count} likes</p>
         </div>
       </div>
     </div>

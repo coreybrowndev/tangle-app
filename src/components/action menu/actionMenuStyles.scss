@@ -1,0 +1,42 @@
+@import "../../sass/variables";
+
+.three-dot-action-menu-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  .menu-list {
+    position: absolute;
+    top: 1.5rem;
+    height: 5rem;
+    padding: 0.3em 1em 1.5em;
+    width: 10rem;
+    height: fit-content;
+    background: rgba(29, 29, 29, 1);
+    border-radius: 1em;
+    right: 0;
+
+    li {
+      list-style-type: none;
+      width: 100%;
+      border-bottom: 1px solid $dark-gray-color;
+
+      button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        background: transparent;
+        padding: 0.9em 0.5em;
+        border: none;
+        font-size: 0.9em;
+        font-weight: bold;
+
+        span {
+          padding-left: 0.5em;
+          color: red;
+        }
+      }
+    }
+  }
+}
