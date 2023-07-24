@@ -2,15 +2,23 @@ import "./threadStyles.scss";
 import { ThreadData } from "../../types";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
+import { db } from "../../config/firebase-config";
 import {
-  MoreHorizontal,
-  Heart,
-  MessageCircle,
-  Repeat,
-  Send,
-} from "react-feather";
+  addDoc,
+  collection,
+  getDoc,
+  doc,
+  updateDoc,
+  increment,
+  where,
+  query,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { Heart, MessageCircle, Repeat, Send } from "react-feather";
 import ReactTimeAgo from "react-time-ago";
 import ActionMenu from "../action menu/ActionMenu";
+import { useEffect, useState } from "react";
 
 interface ThreadProps {
   thread: ThreadData;
@@ -24,10 +32,122 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const timestamp: number = (seconds + nanoseconds / 1000000000) * 1000;
   const date = new Date(timestamp);
 
+  const likesCollection = collection(db, "likes");
+  const threadsCollection = collection(db, "threads");
+
+  const [hasLiked, setHasLiked] = useState<boolean>(false);
+  const [isLikeButtonDisabled, setIsLikedButtonDisabled] =
+    useState<boolean>(false);
+  const [threadInstance, setThreadInstance] = useState<ThreadData>(thread);
+  const currentUserID = "D3dUfQaMH3c52nURgKLbtsdV3C53";
+
+  useEffect(() => {
+    checkUserLike();
+  }, []);
+
+  const checkUserLike = async () => {
+    const userID = "D3dUfQaMH3c52nURgKLbtsdV3C53";
+
+    const likeQuerySnapshot = await getDocs(
+      query(
+        likesCollection,
+        where("thread_id", "==", thread.id),
+        where("user_id", "==", userID)
+      )
+    );
+
+    //If querySnapshot has any documents, user has liked the thread
+    setHasLiked(!likeQuerySnapshot.empty);
+  };
+
+  const handleNewLike = async () => {
+    const userID = "D3dUfQaMH3c52nURgKLbtsdV3C53";
+
+    //Add a new like document to the likes collection
+    if (!hasLiked) {
+      try {
+        setIsLikedButtonDisabled(true);
+
+        await addDoc(likesCollection, {
+          thread_id: thread.id,
+          user_id: userID,
+          timestamp: new Date(),
+        });
+
+        setHasLiked(true);
+
+        const docRef = doc(db, "threads", thread.id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setThreadInstance(docSnap.data() as ThreadData);
+          await updateDoc(docRef, {
+            likes_count: increment(1),
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLikedButtonDisabled(false);
+      }
+    } else {
+      //If user has liked thread, then remove like
+
+      try {
+        const likeQuerySnapshot = await getDocs(
+          query(
+            likesCollection,
+            where("thread_id", "==", thread.id),
+            where("user_id", "==", userID)
+          )
+        );
+
+        if (!likeQuerySnapshot.empty) {
+          //If there is a like document, delete it
+          const likeDoc = likeQuerySnapshot.docs[0];
+          await deleteDoc(doc(likesCollection, likeDoc.id));
+
+          setHasLiked(false);
+
+          const docRef = doc(db, "threads", thread.id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setThreadInstance(docSnap.data() as ThreadData);
+            await updateDoc(docRef, {
+              likes_count: increment(-1),
+            });
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    const updatedThread = await fetchUpdatedThread(thread.id);
+    if (updatedThread) {
+      setThreadInstance(updatedThread);
+    }
+  };
+
+  const fetchUpdatedThread = async (threadId: string) => {
+    try {
+      const docRef = doc(db, "threads", threadId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data() as ThreadData;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className={"thread-wrapper"}>
-      <div className="img-wrapper">
-        <img src={thread.user["image"]} />
+      <div className="left-content">
+        <div className="img-wrapper">
+          <img src={thread.user["image"]} />
+        </div>
+        <div className="line"></div>
       </div>
       <div className="thread-container">
         <div className="thread-header-wrapper">
@@ -45,7 +165,10 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
           )}
         </div>
         <div className="interaction-options">
-          <Heart className="icon" />
+          <Heart
+            onClick={handleNewLike}
+            className={`icon heart-icon ${hasLiked ? "liked" : ""}`}
+          />
           <MessageCircle className="icon" />
           <Repeat className="icon" />
           <Send className="icon" />
@@ -53,7 +176,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
         <div className="interaction-status">
           <p>15 replies</p>
           <p>•</p>
-          <p>{thread.likes_count} likes</p>
+          <p>{threadInstance.likes_count} likes</p>
         </div>
       </div>
     </div>
