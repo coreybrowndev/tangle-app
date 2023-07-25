@@ -39,7 +39,6 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const [isLikeButtonDisabled, setIsLikedButtonDisabled] =
     useState<boolean>(false);
   const [threadInstance, setThreadInstance] = useState<ThreadData>(thread);
-  const currentUserID = "D3dUfQaMH3c52nURgKLbtsdV3C53";
 
   useEffect(() => {
     checkUserLike();
@@ -151,7 +150,9 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
       </div>
       <div className="thread-container">
         <div className="thread-header-wrapper">
-          <strong>{thread.user["user_name"]}</strong>
+          <strong style={{ textTransform: "lowercase" }}>
+            {thread.user["user_name"]}
+          </strong>
           <div className="thread-action-options">
             <p>{<ReactTimeAgo date={date} locale="en-US" />}</p>
             <ActionMenu thread={thread} />

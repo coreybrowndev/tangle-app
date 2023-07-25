@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import Thread from "../components/thread/Thread";
-import NewThreadForm from "../components/new thread form/NewThreadForm";
-import { db } from "../config/firebase-config";
+import Thread from "../../components/thread/Thread";
+import NewThreadForm from "../../components/new thread form/NewThreadForm";
+import { db } from "../../config/firebase-config";
 import {
   getDocs,
   collection,
@@ -10,8 +10,8 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { ThreadData } from "../types";
-import { ThreadContext } from "../context/ThreadContext";
+import { ThreadData } from "../../types";
+import { ThreadContext } from "../../context/ThreadContext";
 
 const Feed: React.FC = () => {
   const { threadsList } = useContext(ThreadContext);

@@ -4,15 +4,8 @@ import { Image } from "react-feather";
 import { db, storage } from "../../config/firebase-config";
 import { addDoc, collection } from "firebase/firestore";
 import { ThreadContext } from "../../context/ThreadContext";
-import {
-  ref,
-  uploadBytes,
-  list,
-  getDownloadURL,
-  getStorage,
-} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import firebase from "firebase/compat/app";
 
 const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
@@ -49,8 +42,6 @@ const NewThreadForm: React.FC = () => {
 
     const storageRef = ref(storage, `/images/${fileObj.name + v4()}`);
     uploadBytes(storageRef, fileObj).then(async () => {
-      alert("Image Uploaded");
-
       const imageRef = ref(storage, storageRef.fullPath);
       const imageUrl = await getDownloadURL(imageRef);
       setImageUrl(imageUrl);

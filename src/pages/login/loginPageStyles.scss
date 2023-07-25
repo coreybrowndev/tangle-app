@@ -1,0 +1,13 @@
+@import "../../sass/variables";
+
+.login-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .form-wrapper {
+    outline: 3px solid red;
+    max-width: 600px;
+  }
+}

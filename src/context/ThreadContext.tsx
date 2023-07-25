@@ -28,7 +28,7 @@ interface ThreadProviderProps {
 
 export const ThreadProvider = ({ children }: ThreadProviderProps) => {
   const [threadsList, setThreadsList] = useState<ThreadData[]>([]);
-
+  const [loading, setLoading] = useState<boolean>(true);
   const threadsCollection = collection(db, "threads");
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
   }, []);
 
   useEffect(() => {
-    console.log("THREAD LIST!", threadsList);
+    setLoading(false);
   }, []);
 
   const getThreads = async () => {
@@ -79,7 +79,7 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
 
   return (
     <ThreadContext.Provider value={ThreadProvider}>
-      {children}
+      {loading ? <p>Loading...</p> : children}
     </ThreadContext.Provider>
   );
 };
