@@ -2,18 +2,27 @@ import { SyntheticEvent, useContext, useState, useRef, useEffect } from "react";
 import "./newThreadFormStyles.scss";
 import { Image } from "react-feather";
 import { db, storage } from "../../config/firebase-config";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDoc, doc } from "firebase/firestore";
 import { ThreadContext } from "../../context/ThreadContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import { useAuth } from "../../context/AuthContext";
+
+interface UserData {
+  user_name: string;
+  image: string;
+}
 
 const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
   const { getThreads } = useContext(ThreadContext);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const threadsCollection = collection(db, "threads");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const { user } = useAuth();
 
   const handleThreadSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -22,7 +31,7 @@ const NewThreadForm: React.FC = () => {
         body: threadBody,
         created_time: new Date(),
         image: imageUrl,
-        owner_id: "D3dUfQaMH3c52nURgKLbtsdV3C53",
+        owner_id: user?.uid,
         likes_count: 0,
       });
       setThreadBody("");
@@ -54,8 +63,35 @@ const NewThreadForm: React.FC = () => {
     }
   };
 
+  const setCurrentUser = async () => {
+    try {
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const userData = userDoc.exists()
+          ? (userDoc.data() as { user_name: string; image: string })
+          : null;
+        setUserData(userData);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentUser();
+  }, []);
+
   return (
     <div className="new-thread-form-wrapper">
+      <div className="new-thread-current-user-wrapper">
+        <div className="image-wrapper">
+          <img src={userData?.image} alt="Profile Picture" />
+        </div>
+
+        <div className="user-wrapper">
+          <strong>{userData?.user_name}</strong>
+        </div>
+      </div>
       <form onSubmit={handleThreadSubmit}>
         <textarea
           required

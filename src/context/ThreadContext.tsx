@@ -33,9 +33,6 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
 
   useEffect(() => {
     getThreads();
-  }, []);
-
-  useEffect(() => {
     setLoading(false);
   }, []);
 

@@ -5,17 +5,25 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 import { auth } from "../config/firebase-config";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
-  user: {} | null;
+  user: User | null;
   loginUser: (userInfo: { email: string; password: string }) => Promise<void>;
+  logoutUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loginUser: async () => {},
+  logoutUser: async () => {},
 });
 
 interface AuthProviderProps {
@@ -26,12 +34,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const loginUser = async (userInfo: { email: string; password: string }) => {
-    console.log("User INFO: ", userInfo);
+    // console.log("User INFO: ", userInfo);
 
     try {
       const user = await signInWithEmailAndPassword(
@@ -45,9 +60,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const logoutUser = async () => {
+    await signOut(auth);
+    navigate("/login");
+  };
+
   const AuthProvider = {
     user,
     loginUser,
+    logoutUser,
   };
 
   return (

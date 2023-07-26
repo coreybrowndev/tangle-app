@@ -12,12 +12,15 @@ import {
 } from "firebase/firestore";
 import { ThreadData } from "../../types";
 import { ThreadContext } from "../../context/ThreadContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Feed: React.FC = () => {
   const { threadsList } = useContext(ThreadContext);
+  const { logoutUser } = useAuth();
 
   return (
     <div className="main--container">
+      <button onClick={logoutUser}>LOGOUT</button>
       <NewThreadForm />
       {threadsList.map((thread) => (
         <Thread key={thread.id} thread={thread} />

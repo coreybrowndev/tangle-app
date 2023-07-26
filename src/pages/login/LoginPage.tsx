@@ -1,13 +1,21 @@
-import { ChangeEvent, SyntheticEvent, useRef } from "react";
+import {
+  ChangeEvent,
+  SyntheticEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "./loginPageStyles.scss";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { auth } from "../../config/firebase-config";
+import { User, onAuthStateChanged } from "firebase/auth";
 
 const LoginPage = () => {
   const loginForm = useRef<HTMLFormElement | null>(null);
-
-  const { loginUser } = useAuth();
+  const [userInfo, setUser] = useState<User | null>(null);
+  const { user, logoutUser, loginUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: ChangeEvent) => {};
 
@@ -19,6 +27,13 @@ const LoginPage = () => {
 
     loginUser({ email, password });
   };
+
+  onAuthStateChanged(auth, (currentUser: User | null) => {
+    setUser(currentUser);
+    if (currentUser) {
+      navigate("/");
+    }
+  });
 
   return (
     <div className="login-page-wrapper">
@@ -60,7 +75,9 @@ const LoginPage = () => {
       </p>
 
       <p>Current logged in User: </p>
-      {auth.currentUser?.email}
+      {userInfo?.email}
+
+      <button onClick={logoutUser}>Logout</button>
     </div>
   );
 };
