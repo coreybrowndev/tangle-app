@@ -46,8 +46,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const loginUser = async (userInfo: { email: string; password: string }) => {
-    // console.log("User INFO: ", userInfo);
-
     try {
       const user = await signInWithEmailAndPassword(
         auth,

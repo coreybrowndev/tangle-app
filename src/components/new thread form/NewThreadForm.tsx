@@ -7,22 +7,18 @@ import { ThreadContext } from "../../context/ThreadContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { useAuth } from "../../context/AuthContext";
-
-interface UserData {
-  user_name: string;
-  image: string;
-}
+import { useUser } from "../../context/UserContext";
 
 const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
   const { getThreads } = useContext(ThreadContext);
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [userData, setUserData] = useState<UserData | null>(null);
 
   const threadsCollection = collection(db, "threads");
   const fileRef = useRef<HTMLInputElement>(null);
 
   const { user } = useAuth();
+  const { userData } = useUser();
 
   const handleThreadSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -63,33 +59,16 @@ const NewThreadForm: React.FC = () => {
     }
   };
 
-  const setCurrentUser = async () => {
-    try {
-      if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        const userData = userDoc.exists()
-          ? (userDoc.data() as { user_name: string; image: string })
-          : null;
-        setUserData(userData);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    setCurrentUser();
-  }, []);
-
   return (
     <div className="new-thread-form-wrapper">
       <div className="new-thread-current-user-wrapper">
         <div className="image-wrapper">
           <img src={userData?.image} alt="Profile Picture" />
         </div>
-
         <div className="user-wrapper">
-          <strong>{userData?.user_name}</strong>
+          <strong style={{ textTransform: "lowercase" }}>
+            {userData?.user_name}
+          </strong>
         </div>
       </div>
       <form onSubmit={handleThreadSubmit}>

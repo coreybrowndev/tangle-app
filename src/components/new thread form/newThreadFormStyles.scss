@@ -17,15 +17,20 @@
       box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
       img {
         width: 100%;
-        height: auto;
+        height: 100%;
         display: block;
         object-fit: cover;
       }
+    }
+
+    .user-wrapper {
+      padding-left: 0.5em;
     }
   }
 
   form {
     width: 100%;
+    margin-top: 1em;
     textarea {
       resize: none;
       width: 100%;
@@ -35,7 +40,6 @@
       border-radius: 1em;
       background: rgba(29, 29, 29, 1);
       border: none;
-      margin-bottom: 0.4em;
       caret-color: #5facff;
     }
 
