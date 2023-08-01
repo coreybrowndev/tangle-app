@@ -13,7 +13,6 @@ const Feed: React.FC = () => {
     <div className="main--wrapper">
       <SideBar />
       <div className="main--container">
-        <button onClick={logoutUser}>LOGOUT</button>
         <NewThreadForm />
         {threadsList.map((thread) => (
           <Thread key={thread.id} thread={thread} />

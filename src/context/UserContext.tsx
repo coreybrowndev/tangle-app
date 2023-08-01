@@ -125,7 +125,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     displayCurrentUser();
-  }, [user]);
+  }, []);
 
   const UserProvider = {
     user,

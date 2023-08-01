@@ -1,12 +1,14 @@
 import React from "react";
-import "./profilePageStyles.scss";
+import "./currentUserProfilePageStyles.scss";
 import { useUser } from "../../context/UserContext";
 import { MoreHorizontal, Settings } from "react-feather";
 import UserThreads from "../../components/profile page components/UserThreads";
 import SideBar from "../../components/side bar/SideBar";
 
-const ProfilePage = () => {
+const CurrentUserProfilePage = () => {
   const { userData, userFollowsCount } = useUser();
+
+  console.log("USER DATA---s-s-s: ", userData);
 
   return (
     <div className="profile-page-wrapper">
@@ -47,4 +49,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default CurrentUserProfilePage;

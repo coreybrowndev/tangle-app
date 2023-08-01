@@ -19,6 +19,7 @@ import { Heart, MessageCircle, Repeat, Send } from "react-feather";
 import ReactTimeAgo from "react-time-ago";
 import ActionMenu from "../action menu/ActionMenu";
 import { useEffect, useState } from "react";
+import { NavLink, Navigate } from "react-router-dom";
 
 interface ThreadProps {
   thread: ThreadData;
@@ -144,7 +145,9 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
     <div className={"thread-wrapper"}>
       <div className="left-content">
         <div className="img-wrapper">
-          <img src={thread.user["image"]} />
+          <NavLink to={`/Profile`}>
+            <img src={thread.user["image"]} />
+          </NavLink>
         </div>
         <div className="line"></div>
       </div>

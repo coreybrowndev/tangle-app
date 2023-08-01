@@ -4,8 +4,14 @@ import appLogo from "../../assets/twitter-x-seeklogo.com-4.svg";
 import { NavLink } from "react-router-dom";
 import { Home, Search, PlusSquare, Heart, Menu } from "react-feather";
 import tempProfilePic from "../../assets/TEMP-IMG.jpg";
+import { useAuth } from "../../context/AuthContext";
+import SideBarActionMenu from "./sidebar action menu/SideBarActionMenu";
+import { useUser } from "../../context/UserContext";
 
 const SideBar = () => {
+  const { user } = useAuth();
+  const { userData } = useUser();
+
   return (
     <div className="sidebar-container">
       <div className={"logo-image-wrapper"}>
@@ -44,7 +50,7 @@ const SideBar = () => {
             </div>
           </button>
         </NavLink>
-        <NavLink to={"/Profile"}>
+        <NavLink to={`/Profile`}>
           <button>
             <div className={"nav-btn-content"}>
               <div className="profile-image-wrapper">
@@ -56,8 +62,8 @@ const SideBar = () => {
         </NavLink>
         <NavLink className={"align-bottom"} to={""}>
           <button>
-            <div className={"nav-btn-content"}>
-              <Menu />
+            <div className={"nav-btn-content sidebar-hamburger-menu"}>
+              <SideBarActionMenu />
               <h3>More</h3>
             </div>
           </button>
