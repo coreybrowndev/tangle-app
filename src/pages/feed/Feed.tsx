@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import Thread from "../../components/thread/Thread";
-import NewThreadForm from "../../components/new thread form/NewThreadForm";
+import NewThreadForm from "../../components/new-thread-form/NewThreadForm";
 import { ThreadContext } from "../../context/ThreadContext";
 import { useAuth } from "../../context/AuthContext";
-import SideBar from "../../components/side bar/SideBar";
+import SideBar from "../../components/side-bar/SideBar";
 
 const Feed: React.FC = () => {
   const { threadsList } = useContext(ThreadContext);

@@ -2,8 +2,8 @@ import React from "react";
 import "./currentUserProfilePageStyles.scss";
 import { useUser } from "../../context/UserContext";
 import { MoreHorizontal, Settings } from "react-feather";
-import UserThreads from "../../components/profile page components/UserThreads";
-import SideBar from "../../components/side bar/SideBar";
+import UserThreads from "../../components/profile-page-components/UserThreads";
+import SideBar from "../../components/side-bar/SideBar";
 
 const CurrentUserProfilePage = () => {
   const { userData, userFollowsCount } = useUser();

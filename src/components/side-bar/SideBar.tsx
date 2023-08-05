@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import { Home, Search, PlusSquare, Heart, Menu } from "react-feather";
 import tempProfilePic from "../../assets/TEMP-IMG.jpg";
 import { useAuth } from "../../context/AuthContext";
-import SideBarActionMenu from "./sidebar action menu/SideBarActionMenu";
+import SideBarActionMenu from "./sidebar-action-menu/SideBarActionMenu";
 import { useUser } from "../../context/UserContext";
 
 const SideBar = () => {

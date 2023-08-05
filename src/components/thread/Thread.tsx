@@ -17,7 +17,7 @@ import {
 } from "firebase/firestore";
 import { Heart, MessageCircle, Repeat, Send } from "react-feather";
 import ReactTimeAgo from "react-time-ago";
-import ActionMenu from "../action menu/ActionMenu";
+import ActionMenu from "../action-menu/ActionMenu";
 import { useEffect, useState } from "react";
 import { NavLink, Navigate } from "react-router-dom";
 
