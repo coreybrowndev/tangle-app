@@ -1,22 +1,19 @@
 import React from "react";
-import "./currentUserProfilePageStyles.scss";
-import { useUser } from "../../context/UserContext";
+import "../userProfilePageStyles.scss";
+import { useUser } from "../../../context/UserContext";
 import { MoreHorizontal, Settings } from "react-feather";
-import UserThreads from "../../components/profile-page-components/UserThreads";
-import SideBar from "../../components/side-bar/SideBar";
+import UserThreads from "../../../components/profile-page-components/UserThreads";
+import SideBar from "../../../components/side-bar/SideBar";
 
-const CurrentUserProfilePage = () => {
-  const { userData, userFollowsCount } = useUser();
-
-  console.log("USER DATA---s-s-s: ", userData);
+const CurrentUserProfile = () => {
+  const { userFollowsCount, currentUserData } = useUser();
 
   return (
     <div className="profile-page-wrapper">
-      <SideBar />
       <div className="profile-page-container">
         <div className="profile-page-header">
           <div className="profile-page-name-desc-followers-wrapper">
-            <h1>{userData?.user_name}</h1>
+            <h1>{currentUserData?.user_name}</h1>
             <p>Soon you will be able to add personalized descriptions🔥</p>
             <div className="followers-following-wrapper">
               <h3>{userFollowsCount?.followers.length} followers</h3>
@@ -26,7 +23,7 @@ const CurrentUserProfilePage = () => {
           </div>
           <div className="profile-page-header-image-action-items-wrapper">
             <div className="profile-page-header-image-wrapper">
-              <img src={userData?.image} alt="" />
+              <img src={currentUserData?.image} alt="" />
             </div>
             <div className="action-items-wrapper">
               <button>
@@ -49,4 +46,4 @@ const CurrentUserProfilePage = () => {
   );
 };
 
-export default CurrentUserProfilePage;
+export default CurrentUserProfile;

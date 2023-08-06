@@ -16,9 +16,6 @@ const SideBarActionMenu = () => {
       {menuVisible && (
         <ul className="menu-list">
           <li>
-            <button>Learn More</button>
-          </li>
-          <li>
             <button onClick={logoutUser}>
               Logout <LogOut />{" "}
             </button>

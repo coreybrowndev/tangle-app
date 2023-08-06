@@ -18,7 +18,7 @@ const NewThreadForm: React.FC = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const { user } = useAuth();
-  const { userData } = useUser();
+  const { currentUserData } = useUser();
 
   const handleThreadSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -63,11 +63,11 @@ const NewThreadForm: React.FC = () => {
     <div className="new-thread-form-wrapper">
       <div className="new-thread-current-user-wrapper">
         <div className="image-wrapper">
-          <img src={userData?.image} alt="Profile Picture" />
+          <img src={currentUserData?.image} alt="Profile Picture" />
         </div>
         <div className="user-wrapper">
           <strong style={{ textTransform: "lowercase" }}>
-            {userData?.user_name}
+            {currentUserData?.user_name}
           </strong>
         </div>
       </div>

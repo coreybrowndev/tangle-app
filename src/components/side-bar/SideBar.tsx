@@ -9,8 +9,7 @@ import SideBarActionMenu from "./sidebar-action-menu/SideBarActionMenu";
 import { useUser } from "../../context/UserContext";
 
 const SideBar = () => {
-  const { user } = useAuth();
-  const { userData } = useUser();
+  const { currentUserData } = useUser();
 
   return (
     <div className="sidebar-container">
@@ -50,11 +49,11 @@ const SideBar = () => {
             </div>
           </button>
         </NavLink>
-        <NavLink to={`/Profile`}>
+        <NavLink to={`/Profile/you`}>
           <button>
             <div className={"nav-btn-content"}>
               <div className="profile-image-wrapper">
-                <img src={tempProfilePic} alt="" />
+                <img src={currentUserData?.image} alt="" />
               </div>
               <h3>Profile</h3>
             </div>

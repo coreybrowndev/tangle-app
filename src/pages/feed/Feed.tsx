@@ -7,11 +7,9 @@ import SideBar from "../../components/side-bar/SideBar";
 
 const Feed: React.FC = () => {
   const { threadsList } = useContext(ThreadContext);
-  const { logoutUser } = useAuth();
 
   return (
     <div className="main--wrapper">
-      <SideBar />
       <div className="main--container">
         <NewThreadForm />
         {threadsList.map((thread) => (

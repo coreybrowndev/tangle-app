@@ -20,6 +20,8 @@ import ReactTimeAgo from "react-time-ago";
 import ActionMenu from "../action-menu/ActionMenu";
 import { useEffect, useState } from "react";
 import { NavLink, Navigate } from "react-router-dom";
+import { useUser } from "../../context/UserContext";
+import { get } from "firebase/database";
 
 interface ThreadProps {
   thread: ThreadData;
@@ -34,7 +36,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const date = new Date(timestamp);
 
   const likesCollection = collection(db, "likes");
-  const threadsCollection = collection(db, "threads");
+  const { getUserData } = useUser();
 
   const [hasLiked, setHasLiked] = useState<boolean>(false);
   const [isLikeButtonDisabled, setIsLikedButtonDisabled] =
@@ -141,21 +143,30 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
     }
   };
 
+  const handleUserClick = (username: string) => {
+    getUserData(username);
+    console.log(username);
+  };
+
   return (
     <div className={"thread-wrapper"}>
       <div className="left-content">
         <div className="img-wrapper">
-          <NavLink to={`/Profile`}>
-            <img src={thread.user["image"]} />
-          </NavLink>
+          <img src={thread.user["image"]} />
         </div>
         <div className="line"></div>
       </div>
       <div className="thread-container">
         <div className="thread-header-wrapper">
-          <strong style={{ textTransform: "lowercase" }}>
-            {thread.user["user_name"]}
-          </strong>
+          <NavLink
+            style={{ textDecoration: "none", color: "inherit" }}
+            to={`/Profile/${thread.user["user_name"]}`}
+            onClick={() => handleUserClick(thread.user["user_name"])}
+          >
+            <strong style={{ textTransform: "lowercase" }}>
+              {thread.user["user_name"]}
+            </strong>
+          </NavLink>
           <div className="thread-action-options">
             <p>{<ReactTimeAgo date={date} locale="en-US" />}</p>
             <ActionMenu thread={thread} />
