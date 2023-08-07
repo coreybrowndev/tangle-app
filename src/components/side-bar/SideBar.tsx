@@ -9,7 +9,12 @@ import SideBarActionMenu from "./sidebar-action-menu/SideBarActionMenu";
 import { useUser } from "../../context/UserContext";
 
 const SideBar = () => {
-  const { currentUserData } = useUser();
+  const { currentUserData, getUserData } = useUser();
+
+  const handleGetUserData = (username: string) => {
+    console.log("this is username: ", username);
+    getUserData(username);
+  };
 
   return (
     <div className="sidebar-container">
@@ -49,7 +54,10 @@ const SideBar = () => {
             </div>
           </button>
         </NavLink>
-        <NavLink to={`/Profile/you`}>
+        <NavLink
+          onClick={() => handleGetUserData(currentUserData!.user_name)}
+          to={`/Profile/you`}
+        >
           <button>
             <div className={"nav-btn-content"}>
               <div className="profile-image-wrapper">

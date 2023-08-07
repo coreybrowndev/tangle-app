@@ -17,6 +17,7 @@ import {
 import { db } from "../config/firebase-config";
 import { User } from "firebase/auth";
 import { ThreadData, UserData } from "../types";
+import { set } from "firebase/database";
 
 interface UserContextType {
   user: User | null;
@@ -53,24 +54,28 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [userFollowsCount, setUserFollowsCount] = useState<FollowsData | null>(
     null
   );
+  const [userID, setUserID] = useState<string>("");
 
   const { user } = useAuth();
 
   const threadsCollection = collection(db, "threads");
   const userCollection = collection(db, "users");
 
-  const displayCurrentUser = async () => {
+  const getCurrentUserData = async () => {
     try {
       if (user) {
-        setLoading(false);
+        // setLoading(false);
+        setLoading(true);
         const userDoc = await getDoc(doc(db, "users", user.uid));
         const userData = userDoc.exists()
           ? (userDoc.data() as { user_name: string; image: string })
           : null;
         setCurrentUserData(userData);
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
 
@@ -78,10 +83,10 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const getUserThreads = async () => {
     try {
-      //Change this function to grab the threads of ANY user instead of the current user.
-      if (user) {
+      if (userID) {
+        setLoading(true);
         const userThreads = await getDocs(
-          query(threadsCollection, where("owner_id", "==", user.uid))
+          query(threadsCollection, where("owner_id", "==", userID))
         );
         const userThreadsData = userThreads.docs.map((doc) =>
           doc.data()
@@ -101,24 +106,29 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         const threadsWithUser = await Promise.all(threadsWithUserPromises);
         //@ts-ignore
         setUserThreads(threadsWithUser);
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
 
   const getUserFollowsCount = async () => {
     //Change this to get ANY users follows count instead of the current user
     try {
-      if (user) {
-        const followsDocs = await getDoc(doc(db, "follows", user.uid));
+      if (user && userID) {
+        setLoading(true);
+        const followsDocs = await getDoc(doc(db, "follows", userID));
         const followsData = followsDocs.exists()
           ? (followsDocs.data() as { followers: string[]; following: string[] })
           : null;
         setUserFollowsCount(followsData);
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
 
@@ -131,24 +141,25 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
       if (!aUser.empty) {
         const userData = aUser.docs.map((doc) => doc.data()) as UserData[];
+        const docID = aUser.docs.map((doc) => doc.id);
+        setUserID(docID[0]);
         setUserData(userData[0]);
       } else {
         setUserData(null);
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    getUserThreads();
-
-    //RESOLVE ISSUE WITH NEEDING TO REFRESH EACH CONTEXT TO SEE CURRENT USER DATA
     getUserFollowsCount();
-  }, []);
+    getUserThreads();
+  }, [userID]);
 
   useEffect(() => {
-    displayCurrentUser();
+    getCurrentUserData();
   }, []);
 
   const UserProvider = {
@@ -158,6 +169,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     userFollowsCount,
     currentUserData,
     getUserData,
+    loading,
   };
 
   return (

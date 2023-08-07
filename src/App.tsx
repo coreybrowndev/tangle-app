@@ -15,8 +15,8 @@ function App() {
     <Router>
       <AuthProvider>
         <UserProvider>
-          <SideBar />
           <ThreadProvider>
+            <SideBar />
             <Routes>
               <Route path="/Profile/you" element={<CurrentUserProfile />} />
               <Route

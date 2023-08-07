@@ -29,6 +29,7 @@ interface ThreadProviderProps {
 export const ThreadProvider = ({ children }: ThreadProviderProps) => {
   const [threadsList, setThreadsList] = useState<ThreadData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
   const threadsCollection = collection(db, "threads");
 
   useEffect(() => {

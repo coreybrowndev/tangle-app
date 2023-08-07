@@ -6,7 +6,7 @@ import UserThreads from "../../components/profile-page-components/UserThreads";
 import SideBar from "../../components/side-bar/SideBar";
 
 const UserProfilePage = () => {
-  const { userData, userFollowsCount, currentUserData } = useUser();
+  const { userData, userFollowsCount } = useUser();
 
   console.log("USER DATA---s-s-s: ", userData);
 

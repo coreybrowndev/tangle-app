@@ -21,7 +21,6 @@ import ActionMenu from "../action-menu/ActionMenu";
 import { useEffect, useState } from "react";
 import { NavLink, Navigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
-import { get } from "firebase/database";
 
 interface ThreadProps {
   thread: ThreadData;
@@ -37,6 +36,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
 
   const likesCollection = collection(db, "likes");
   const { getUserData } = useUser();
+  const { user } = useUser();
 
   const [hasLiked, setHasLiked] = useState<boolean>(false);
   const [isLikeButtonDisabled, setIsLikedButtonDisabled] =
@@ -48,7 +48,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   }, []);
 
   const checkUserLike = async () => {
-    const userID = "D3dUfQaMH3c52nURgKLbtsdV3C53";
+    const userID = user?.uid;
 
     const likeQuerySnapshot = await getDocs(
       query(
@@ -63,7 +63,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   };
 
   const handleNewLike = async () => {
-    const userID = "D3dUfQaMH3c52nURgKLbtsdV3C53";
+    const userID = user?.uid;
 
     //Add a new like document to the likes collection
     if (!hasLiked) {
@@ -145,7 +145,6 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
 
   const handleUserClick = (username: string) => {
     getUserData(username);
-    console.log(username);
   };
 
   return (
@@ -159,7 +158,6 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
       <div className="thread-container">
         <div className="thread-header-wrapper">
           <NavLink
-            style={{ textDecoration: "none", color: "inherit" }}
             to={`/Profile/${thread.user["user_name"]}`}
             onClick={() => handleUserClick(thread.user["user_name"])}
           >
