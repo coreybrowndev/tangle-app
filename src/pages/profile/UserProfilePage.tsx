@@ -8,10 +8,9 @@ import SideBar from "../../components/side-bar/SideBar";
 const UserProfilePage = () => {
   const { userData, userFollowsCount } = useUser();
 
-  console.log("USER DATA---s-s-s: ", userData);
-
   return (
     <div className="profile-page-wrapper">
+      <SideBar />
       <div className="profile-page-container">
         <div className="profile-page-header">
           <div className="profile-page-name-desc-followers-wrapper">

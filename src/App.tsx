@@ -9,14 +9,11 @@ import UserProfilePage from "./pages/profile/UserProfilePage.tsx";
 import SideBar from "./components/side-bar/SideBar.tsx";
 import CurrentUserProfile from "./pages/profile/current-user/CurrentUserProfile.tsx";
 function App() {
-  // console.log("USER DATA: ", userData);
-
   return (
     <Router>
       <AuthProvider>
         <UserProvider>
           <ThreadProvider>
-            <SideBar />
             <Routes>
               <Route path="/Profile/you" element={<CurrentUserProfile />} />
               <Route

@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ThreadData } from "../types";
 import { db } from "../config/firebase-config";
 import {
@@ -9,6 +15,9 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
+import { useUser } from "./UserContext";
+import Loading from "../components/loading-state/Loading";
+import { set } from "firebase/database";
 
 interface ThreadContextType {
   threadsList: ThreadData[];
@@ -28,8 +37,8 @@ interface ThreadProviderProps {
 
 export const ThreadProvider = ({ children }: ThreadProviderProps) => {
   const [threadsList, setThreadsList] = useState<ThreadData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isThreadOwner, setIsThreadOwner] = useState<boolean>(false);
   const threadsCollection = collection(db, "threads");
 
   useEffect(() => {
@@ -39,6 +48,7 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
 
   const getThreads = async () => {
     try {
+      setLoading(true);
       const getDataInDescendingOrder = query(
         threadsCollection,
         orderBy("created_time", "desc")
@@ -64,6 +74,7 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
       const threadsWithUser = await Promise.all(threadsWithUserPromises);
       //@ts-ignore
       setThreadsList(threadsWithUser);
+      setLoading(false);
     } catch (err) {
       console.error(err);
     }
@@ -77,7 +88,11 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
 
   return (
     <ThreadContext.Provider value={ThreadProvider}>
-      {loading ? <p>Loading...</p> : children}
+      {loading ? <Loading /> : children}
     </ThreadContext.Provider>
   );
+};
+
+export const useThread = () => {
+  return useContext(ThreadContext);
 };

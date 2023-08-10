@@ -13,6 +13,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../config/firebase-config";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/loading-state/Loading";
 
 interface AuthContextType {
   user: User | null;
@@ -31,7 +32,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
 
   const navigate = useNavigate();
@@ -39,11 +40,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      setAuthLoading(false);
 
       if (user === null) {
         navigate("/login");
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -75,7 +76,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider value={AuthProvider}>
-      {loading ? <p>Loading...</p> : children}
+      {authLoading ? <Loading /> : children}
     </AuthContext.Provider>
   );
 };

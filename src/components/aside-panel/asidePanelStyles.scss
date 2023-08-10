@@ -1,0 +1,62 @@
+@import "../../sass/variables";
+
+.aside-panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-height: 75vh;
+  width: 400px;
+  max-width: 500px;
+  position: fixed;
+  right: 0;
+
+  padding-top: 2em;
+  padding-right: 1em;
+
+  .current-user-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      border: 1px solid $dark-gray-color;
+      outline: none;
+      padding: 0.5em 1.3em;
+      margin: 0;
+      height: fit-content;
+      border-radius: 0.5em;
+    }
+  }
+
+  .suggested-users-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding-top: 1em;
+
+    h4 {
+      margin: 0;
+      padding: 0;
+      color: $dark-gray-color;
+    }
+    .users-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .follow {
+        display: flex;
+
+        button {
+          border: 1px solid $dark-gray-color;
+          outline: none;
+          padding: 0.5em 1.3em;
+          margin: 0;
+
+          height: fit-content;
+          border-radius: 0.5em;
+        }
+      }
+    }
+  }
+}

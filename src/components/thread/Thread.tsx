@@ -21,6 +21,7 @@ import ActionMenu from "../action-menu/ActionMenu";
 import { useEffect, useState } from "react";
 import { NavLink, Navigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
+import { useThread } from "../../context/ThreadContext";
 
 interface ThreadProps {
   thread: ThreadData;
@@ -33,11 +34,9 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const nanoseconds = thread.created_time["nanoseconds"];
   const timestamp: number = (seconds + nanoseconds / 1000000000) * 1000;
   const date = new Date(timestamp);
-
   const likesCollection = collection(db, "likes");
   const { getUserData } = useUser();
-  const { user } = useUser();
-
+  const { user, currentUserData } = useUser();
   const [hasLiked, setHasLiked] = useState<boolean>(false);
   const [isLikeButtonDisabled, setIsLikedButtonDisabled] =
     useState<boolean>(false);
@@ -144,6 +143,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   };
 
   const handleUserClick = (username: string) => {
+    if (!username) return;
     getUserData(username);
   };
 
@@ -158,7 +158,11 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
       <div className="thread-container">
         <div className="thread-header-wrapper">
           <NavLink
-            to={`/Profile/${thread.user["user_name"]}`}
+            to={
+              thread.user["user_name"] == currentUserData?.user_name
+                ? `/Profile/you`
+                : `/Profile/${thread.user["user_name"]}`
+            }
             onClick={() => handleUserClick(thread.user["user_name"])}
           >
             <strong style={{ textTransform: "lowercase" }}>

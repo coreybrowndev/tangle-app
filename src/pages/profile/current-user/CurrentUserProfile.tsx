@@ -2,12 +2,14 @@ import "../userProfilePageStyles.scss";
 import { useUser } from "../../../context/UserContext";
 import { MoreHorizontal, Settings } from "react-feather";
 import UserThreads from "../../../components/profile-page-components/UserThreads";
+import SideBar from "../../../components/side-bar/SideBar";
 
 const CurrentUserProfile = () => {
   const { userFollowsCount, currentUserData } = useUser();
 
   return (
     <div className="profile-page-wrapper">
+      <SideBar />
       <div className="profile-page-container">
         <div className="profile-page-header">
           <div className="profile-page-name-desc-followers-wrapper">

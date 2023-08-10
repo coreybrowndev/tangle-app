@@ -5,6 +5,7 @@ import { ThreadContext } from "../../context/ThreadContext";
 import { collection, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { ThreadData } from "../../types";
+import { useUser } from "../../context/UserContext";
 
 interface ActionMenuProps {
   thread: ThreadData;
@@ -15,6 +16,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ thread }) => {
   const { setThreadsList } = useContext(ThreadContext);
 
   const threadsCollection = collection(db, "threads");
+  const { user } = useUser();
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -41,10 +43,14 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ thread }) => {
             <button>Get embeded code</button>
           </li>
           <li>
-            <button onClick={() => handleThreadDeletion(thread.id)}>
-              <Trash2 style={{ color: "red" }} />
-              <span>Delete</span>
-            </button>
+            {thread.owner_id === user?.uid ? (
+              <button onClick={() => handleThreadDeletion(thread.id)}>
+                <Trash2 style={{ color: "red" }} />
+                <span>Delete</span>
+              </button>
+            ) : (
+              <button>Report</button>
+            )}
           </li>
         </ul>
       )}

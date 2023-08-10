@@ -3,8 +3,6 @@ import "./sidebarStyles.scss";
 import appLogo from "../../assets/twitter-x-seeklogo.com-4.svg";
 import { NavLink } from "react-router-dom";
 import { Home, Search, PlusSquare, Heart, Menu } from "react-feather";
-import tempProfilePic from "../../assets/TEMP-IMG.jpg";
-import { useAuth } from "../../context/AuthContext";
 import SideBarActionMenu from "./sidebar-action-menu/SideBarActionMenu";
 import { useUser } from "../../context/UserContext";
 
@@ -12,7 +10,7 @@ const SideBar = () => {
   const { currentUserData, getUserData } = useUser();
 
   const handleGetUserData = (username: string) => {
-    console.log("this is username: ", username);
+    if (!username) return;
     getUserData(username);
   };
 

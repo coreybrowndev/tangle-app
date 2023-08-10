@@ -8,6 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
+import UserDetails from "../user-details/UserDetails";
 
 const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
@@ -61,16 +62,10 @@ const NewThreadForm: React.FC = () => {
 
   return (
     <div className="new-thread-form-wrapper">
-      <div className="new-thread-current-user-wrapper">
-        <div className="image-wrapper">
-          <img src={currentUserData?.image} alt="Profile Picture" />
-        </div>
-        <div className="user-wrapper">
-          <strong style={{ textTransform: "lowercase" }}>
-            {currentUserData?.user_name}
-          </strong>
-        </div>
-      </div>
+      <UserDetails
+        username={currentUserData?.user_name}
+        profile_image={currentUserData?.image}
+      />
       <form onSubmit={handleThreadSubmit}>
         <textarea
           required
