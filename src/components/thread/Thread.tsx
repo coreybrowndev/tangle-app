@@ -44,7 +44,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
 
   useEffect(() => {
     checkUserLike();
-  }, []);
+  }, [hasLiked]);
 
   const checkUserLike = async () => {
     const userID = user?.uid;
@@ -143,8 +143,9 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   };
 
   const handleUserClick = (username: string) => {
-    if (!username) return;
-    getUserData(username);
+    if (username !== undefined) {
+      getUserData(username);
+    }
   };
 
   return (
@@ -163,7 +164,10 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
                 ? `/Profile/you`
                 : `/Profile/${thread.user["user_name"]}`
             }
-            onClick={() => handleUserClick(thread.user["user_name"])}
+            onClick={() =>
+              thread.user["user_name"] &&
+              handleUserClick(thread.user["user_name"])
+            }
           >
             <strong style={{ textTransform: "lowercase" }}>
               {thread.user["user_name"]}

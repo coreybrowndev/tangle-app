@@ -9,8 +9,8 @@ const AsidePanel = () => {
     <div className="aside-panel-wrapper">
       <div className="current-user-wrapper">
         <UserDetails
-          username={currentUserData!.user_name}
-          profile_image={currentUserData!.image}
+          username={currentUserData?.user_name}
+          profile_image={currentUserData?.image}
         />
         <div className="add-account">
           <button>Add Account</button>
@@ -19,7 +19,7 @@ const AsidePanel = () => {
       <div className="suggested-users-wrapper">
         <h4>Suggested for you</h4>
         {allUsers?.map((user) => (
-          <div className="users-wrapper">
+          <div key={user.user_name} className="users-wrapper">
             <UserDetails
               key={user.user_name}
               username={user.user_name}

@@ -1,14 +1,14 @@
 import { SyntheticEvent, useContext, useState, useRef, useEffect } from "react";
 import "./newThreadFormStyles.scss";
 import { Image } from "react-feather";
-import { db, storage } from "../../config/firebase-config";
+import { db, storage } from "../../../config/firebase-config";
 import { addDoc, collection, getDoc, doc } from "firebase/firestore";
-import { ThreadContext } from "../../context/ThreadContext";
+import { ThreadContext } from "../../../context/ThreadContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import { useAuth } from "../../context/AuthContext";
-import { useUser } from "../../context/UserContext";
-import UserDetails from "../user-details/UserDetails";
+import { useAuth } from "../../../context/AuthContext";
+import { useUser } from "../../../context/UserContext";
+import UserDetails from "../../user-details/UserDetails";
 
 const NewThreadForm: React.FC = () => {
   const [threadBody, setThreadBody] = useState<string>("");
@@ -73,6 +73,7 @@ const NewThreadForm: React.FC = () => {
           placeholder="Start a Thread..."
           value={threadBody}
           onChange={(e) => setThreadBody(e.target.value)}
+          autoFocus
         ></textarea>
 
         {<img className="uploaded-new-thread-image" src={imageUrl} />}

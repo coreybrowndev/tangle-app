@@ -1,4 +1,3 @@
-import React from "react";
 import "./userThreadsStyles.scss";
 import { useUser } from "../../context/UserContext";
 import Thread from "../thread/Thread";
