@@ -88,6 +88,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         const userThreads = await getDocs(
           query(threadsCollection, where("owner_id", "==", userID))
         );
+
         const userThreadsData = userThreads.docs.map((doc) =>
           doc.data()
         ) as ThreadData[];
@@ -131,14 +132,21 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
   };
 
+  //TODO: REWORK THE FUNCTIONALITY OF THIS FUNCTION,
+  //TODO: CURRENTLY THIS FUNCTION IS ONLY BEING CALLED WHEN THE USERNAME GETS UPDATED
+  //TODO: thus causing the issue of the data not being updated when the page is refreshed!!
+
   const getUserData = async (username: string) => {
     try {
       setLoading(true);
+      localStorage.setItem("username", username);
+
       if (!username) {
         setUserData(null);
         setLoading(false);
         return;
       }
+
       const aUser = await getDocs(
         query(userCollection, where("user_name", "==", username))
       );
@@ -170,6 +178,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     getUserFollowsCount();
     getUserThreads();
+    getUserData(localStorage.getItem("username")!);
   }, [userID]);
 
   useEffect(() => {
