@@ -8,9 +8,17 @@
   max-width: 500px;
   position: fixed;
   right: 0;
-
   padding-top: 4rem;
   padding-right: 1em;
+
+  @media (max-width: 1400px) {
+    display: none;
+  }
+
+  .current-user-wrapper,
+  .suggested-users-wrapper {
+    padding-left: 2rem;
+  }
 
   .current-user-wrapper {
     display: flex;

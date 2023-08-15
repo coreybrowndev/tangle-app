@@ -11,7 +11,9 @@ export interface ThreadData {
   id: string;
   image: string;
   owner_id: string;
+  liked_by: string[];
   likes_count: number;
+  has_liked: boolean;
 }
 
 export interface UserData {

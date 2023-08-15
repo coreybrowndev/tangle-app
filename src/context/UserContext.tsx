@@ -132,10 +132,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
   };
 
-  //TODO: REWORK THE FUNCTIONALITY OF THIS FUNCTION,
-  //TODO: CURRENTLY THIS FUNCTION IS ONLY BEING CALLED WHEN THE USERNAME GETS UPDATED
-  //TODO: thus causing the issue of the data not being updated when the page is refreshed!!
-
   const getUserData = async (username: string) => {
     try {
       setLoading(true);

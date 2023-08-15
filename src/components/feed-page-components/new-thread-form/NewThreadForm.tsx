@@ -29,6 +29,7 @@ const NewThreadForm: React.FC = () => {
         created_time: new Date(),
         image: imageUrl,
         owner_id: user?.uid,
+        liked_by: [],
         likes_count: 0,
       });
       setThreadBody("");
@@ -70,7 +71,7 @@ const NewThreadForm: React.FC = () => {
         <textarea
           required
           name="body"
-          placeholder="Start a Thread..."
+          placeholder="What's tangling in your mind...?"
           value={threadBody}
           onChange={(e) => setThreadBody(e.target.value)}
           autoFocus

@@ -17,7 +17,8 @@ const SideBar = () => {
   return (
     <div className="sidebar-container">
       <div className={"logo-image-wrapper"}>
-        <img src={appLogo} />
+        <h1>𝓣𝓪𝓷𝓰𝓵𝓮</h1>
+        {/* <img src={appLogo} /> */}
       </div>
       <div className="nav-container">
         <NavLink to={"/"}>

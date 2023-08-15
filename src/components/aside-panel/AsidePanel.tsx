@@ -17,7 +17,7 @@ const AsidePanel = () => {
         </div>
       </div>
       <div className="suggested-users-wrapper">
-        <h4>Suggested for you</h4>
+        <h4>Tanglers suggested for you</h4>
         {allUsers?.map((user) => (
           <div key={user.user_name} className="users-wrapper">
             <UserDetails
@@ -26,7 +26,7 @@ const AsidePanel = () => {
               profile_image={user.image}
             />
             <div className="follow">
-              <button>Follow</button>
+              <button>Tangle</button>
             </div>
           </div>
         ))}
