@@ -26,5 +26,12 @@
 
   .user-wrapper {
     padding-left: 0.5em;
+    display: flex;
+    flex-direction: column;
+
+    small {
+      font-size: 0.8em;
+      color: $dark-gray-color;
+    }
   }
 }

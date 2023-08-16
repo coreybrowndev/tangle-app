@@ -44,9 +44,19 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
               thread.user["user_name"] && getUserData(thread.user["user_name"])
             }
           >
-            <strong style={{ textTransform: "lowercase" }}>
-              {thread.user["user_name"]}
-            </strong>
+            <div className="user-flex-wrapper">
+              <strong style={{ textTransform: "lowercase" }}>
+                {thread.user["user_name"]}
+              </strong>
+
+              {thread.user["user_name"] === currentUserData?.user_name ? (
+                <small>
+                  {currentUserData.first_name + " " + currentUserData.last_name}
+                </small>
+              ) : (
+                <small>Tangled since {2023} </small>
+              )}
+            </div>
           </NavLink>
           <div className="thread-action-options">
             <p>{<ReactTimeAgo date={date} locale="en-US" />}</p>

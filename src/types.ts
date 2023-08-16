@@ -19,4 +19,6 @@ export interface ThreadData {
 export interface UserData {
   user_name: string;
   image: string;
+  first_name: string;
+  last_name: string;
 }

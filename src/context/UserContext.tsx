@@ -22,7 +22,12 @@ import Loading from "../components/loading-state/Loading";
 interface UserContextType {
   user: User | null;
   userData: null | { user_name: string; image: string };
-  currentUserData: null | { user_name: string; image: string };
+  currentUserData: null | {
+    user_name: string;
+    image: string;
+    first_name: string;
+    last_name: string;
+  };
   userFollowsCount: FollowsData | null;
   getUserData: (username: string) => void;
   allUsers: UserData[] | null;
@@ -67,7 +72,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         setLoading(true);
         const userDoc = await getDoc(doc(db, "users", user.uid));
         const userData = userDoc.exists()
-          ? (userDoc.data() as { user_name: string; image: string })
+          ? (userDoc.data() as {
+              user_name: string;
+              image: string;
+              first_name: string;
+              last_name: string;
+            })
           : null;
         setCurrentUserData(userData);
         setLoading(false);

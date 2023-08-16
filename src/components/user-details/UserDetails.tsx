@@ -28,6 +28,13 @@ const UserDetails: React.FC<UserDetailsProps> = ({
       >
         <div className="user-wrapper">
           <strong style={{ textTransform: "lowercase" }}>{username}</strong>
+          {username === currentUserData?.user_name ? (
+            <small>
+              {currentUserData?.first_name + " " + currentUserData?.last_name}
+            </small>
+          ) : (
+            <small>Tangled since {2023} </small>
+          )}
         </div>
       </NavLink>
     </div>
