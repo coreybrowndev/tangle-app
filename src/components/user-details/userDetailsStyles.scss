@@ -3,6 +3,10 @@
 .user-details-wrapper {
   display: flex;
 
+  a {
+    text-decoration: none;
+    color: white;
+  }
   .image-wrapper {
     max-width: 50px;
     min-width: 50px;

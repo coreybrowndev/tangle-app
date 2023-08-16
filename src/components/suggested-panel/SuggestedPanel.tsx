@@ -1,10 +1,13 @@
 import React from "react";
 import UserDetails from "../user-details/UserDetails";
-import "./asidePanelStyles.scss";
+import "./suggestedPanelStyles.scss";
 import { useUser } from "../../context/UserContext";
 
-const AsidePanel = () => {
+const SuggestedPanel = () => {
   const { currentUserData, allUsers } = useUser();
+  const filteredUsers = allUsers?.filter(
+    (user) => user.user_name !== currentUserData?.user_name
+  );
   return (
     <div className="aside-panel-wrapper">
       <div className="current-user-wrapper">
@@ -18,7 +21,7 @@ const AsidePanel = () => {
       </div>
       <div className="suggested-users-wrapper">
         <h4>Tanglers suggested for you</h4>
-        {allUsers?.map((user) => (
+        {filteredUsers?.map((user) => (
           <div key={user.user_name} className="users-wrapper">
             <UserDetails
               key={user.user_name}
@@ -36,4 +39,4 @@ const AsidePanel = () => {
   );
 };
 
-export default AsidePanel;
+export default SuggestedPanel;

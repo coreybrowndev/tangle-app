@@ -71,7 +71,7 @@ const NewThreadForm: React.FC = () => {
         <textarea
           required
           name="body"
-          placeholder="What's tangling in your mind...?"
+          placeholder="What's got your mind tangled...?"
           value={threadBody}
           onChange={(e) => setThreadBody(e.target.value)}
           autoFocus

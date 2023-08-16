@@ -23,20 +23,20 @@ interface UserContextType {
   user: User | null;
   userData: null | { user_name: string; image: string };
   currentUserData: null | { user_name: string; image: string };
-  userThreads: ThreadData[];
   userFollowsCount: FollowsData | null;
   getUserData: (username: string) => void;
   allUsers: UserData[] | null;
+  userID: string;
 }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   userData: null,
   currentUserData: null,
-  userThreads: [],
   userFollowsCount: { followers: [], following: [] } as FollowsData,
   getUserData: () => {},
   allUsers: null,
+  userID: "",
 });
 
 interface UserProviderProps {
@@ -52,7 +52,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentUserData, setCurrentUserData] = useState<UserData | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [userThreads, setUserThreads] = useState<ThreadData[]>([]);
   const [userFollowsCount, setUserFollowsCount] = useState<FollowsData | null>(
     null
   );
@@ -71,42 +70,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
           ? (userDoc.data() as { user_name: string; image: string })
           : null;
         setCurrentUserData(userData);
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
-
-  //TODO: FIX ISSUE WITH NEEDING TO REFRESH EACH CONTEXT TO SEE CURRENT USER DATA
-
-  const getUserThreads = async () => {
-    try {
-      if (userID) {
-        setLoading(true);
-        const userThreads = await getDocs(
-          query(threadsCollection, where("owner_id", "==", userID))
-        );
-
-        const userThreadsData = userThreads.docs.map((doc) =>
-          doc.data()
-        ) as ThreadData[];
-
-        const threadsWithUserPromises = userThreadsData.map(async (thread) => {
-          const userDoc = await getDoc(doc(db, "users", thread.owner_id));
-          const userData = userDoc.exists()
-            ? (userDoc.data() as { user_name: string; image: string })
-            : null;
-          return {
-            ...thread,
-            user: userData,
-          };
-        });
-
-        const threadsWithUser = await Promise.all(threadsWithUserPromises);
-        //@ts-ignore
-        setUserThreads(threadsWithUser);
         setLoading(false);
       }
     } catch (err) {
@@ -173,7 +136,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     getUserFollowsCount();
-    getUserThreads();
+    // getUserThreads();
     getUserData(localStorage.getItem("username")!);
   }, [userID]);
 
@@ -185,12 +148,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const UserProvider = {
     user,
     userData,
-    userThreads,
     userFollowsCount,
     currentUserData,
     getUserData,
     loading,
     allUsers,
+    userID,
   };
 
   return (

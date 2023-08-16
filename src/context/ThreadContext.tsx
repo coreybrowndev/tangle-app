@@ -106,7 +106,6 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
   };
 
   const handleThreadLike = async (thread: ThreadData) => {
-    console.log("THis thread was liked", thread.id);
     const userID = user?.uid;
 
     if (userID) {
@@ -170,10 +169,9 @@ export const ThreadProvider = ({ children }: ThreadProviderProps) => {
               ? {
                   ...t,
                   has_liked: !hasLikedThread,
-                  likes_count:
-                    hasLikedThread == true
-                      ? t.likes_count - 1
-                      : t.likes_count + 1,
+                  likes_count: hasLikedThread
+                    ? t.likes_count - 1
+                    : t.likes_count + 1,
                 }
               : t
           );

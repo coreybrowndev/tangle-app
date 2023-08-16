@@ -2,24 +2,10 @@ import "./threadStyles.scss";
 import { ThreadData } from "../../types";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import { db } from "../../config/firebase-config";
-import {
-  addDoc,
-  collection,
-  getDoc,
-  doc,
-  updateDoc,
-  increment,
-  where,
-  query,
-  getDocs,
-  deleteDoc,
-} from "firebase/firestore";
 import { Heart, MessageCircle, Repeat, Send } from "react-feather";
 import ReactTimeAgo from "react-time-ago";
 import ActionMenu from "../action-menu/ActionMenu";
-import { useEffect, useState } from "react";
-import { NavLink, Navigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import { useThread } from "../../context/ThreadContext";
 
@@ -34,17 +20,9 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
   const nanoseconds = thread.created_time["nanoseconds"];
   const timestamp: number = (seconds + nanoseconds / 1000000000) * 1000;
   const date = new Date(timestamp);
-  const { user, currentUserData, getUserData } = useUser();
+  const { currentUserData, getUserData } = useUser();
 
-  //thread instance will contain the updated thread data including the likes count
-  // const [threadInstance, setThreadInstance] = useState<ThreadData>(thread);
-  const { handleThreadLike, hasLiked } = useThread();
-
-  //handle like of a thread
-
-  const getUsername = (username: string) => {
-    getUserData(username);
-  };
+  const { handleThreadLike } = useThread();
 
   return (
     <div className={"thread-wrapper"}>
@@ -63,7 +41,7 @@ const Thread: React.FC<ThreadProps> = ({ thread }) => {
                 : `/Profile/${thread.user["user_name"]}`
             }
             onClick={() =>
-              thread.user["user_name"] && getUsername(thread.user["user_name"])
+              thread.user["user_name"] && getUserData(thread.user["user_name"])
             }
           >
             <strong style={{ textTransform: "lowercase" }}>
