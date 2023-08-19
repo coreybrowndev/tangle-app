@@ -12,16 +12,17 @@ import {
   getDoc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { User } from "firebase/auth";
-import { ThreadData, UserData } from "../types";
+import { UserData } from "../types";
 import Loading from "../components/loading-state/Loading";
 
 interface UserContextType {
   user: User | null;
-  userData: null | { user_name: string; image: string };
+  userData: null | { id: string; user_name: string; image: string };
   currentUserData: null | {
     user_name: string;
     image: string;
@@ -32,6 +33,9 @@ interface UserContextType {
   getUserData: (username: string) => void;
   allUsers: UserData[] | null;
   userID: string;
+  followUser: (username: string) => void;
+  followedUsers: string[];
+  isFollowing: boolean;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -42,6 +46,9 @@ const UserContext = createContext<UserContextType>({
   getUserData: () => {},
   allUsers: null,
   userID: "",
+  followUser: () => {},
+  followedUsers: [],
+  isFollowing: false,
 });
 
 interface UserProviderProps {
@@ -62,8 +69,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   );
   const [allUsers, setAllUsers] = useState<UserData[] | null>(null);
   const [userID, setUserID] = useState<string>("");
+  const [followedUsers, setFollowedUsers] = useState<string[]>([]);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const { user } = useAuth();
-  const threadsCollection = collection(db, "threads");
   const userCollection = collection(db, "users");
 
   const getCurrentUserData = async () => {
@@ -73,6 +81,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         const userData = userDoc.exists()
           ? (userDoc.data() as {
+              id: string;
               user_name: string;
               image: string;
               first_name: string;
@@ -87,6 +96,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {}, [followedUsers]);
 
   const getUserFollowsCount = async () => {
     try {
@@ -144,9 +155,103 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
   };
 
+  const followUser = async (username: string) => {
+    try {
+      if (username) {
+        const currentUID = user?.uid;
+        getUserData(username);
+        const userToFollow = userID;
+        //Update the document of the user that has been followed
+        const followedUserDoc = await getDoc(doc(db, "follows", userToFollow!));
+
+        //Update the document of the user that is following
+        const currentUserFollowsDoc = await getDoc(
+          doc(db, "follows", currentUID!)
+        );
+
+        if (followedUserDoc.exists()) {
+          const followsData = followedUserDoc.data() as {
+            followers: string[];
+            following: string[];
+          };
+
+          if (followsData.followers.includes(currentUID!)) {
+            const newFollowers = followsData.followers.filter(
+              (follower) => follower !== currentUID
+            );
+            const newFollowsData = {
+              ...followsData,
+              followers: newFollowers,
+            };
+            await updateDoc(
+              doc(db, "follows", userToFollow!),
+              newFollowsData
+            ).then(() => getUserFollowsCount());
+
+            setIsFollowing(false);
+            setFollowedUsers((prevFollowedUsers) =>
+              prevFollowedUsers.filter((user) => user !== userToFollow)
+            );
+          } else {
+            const newFollowers = [...followsData.followers, currentUID!];
+            const newFollowsData = {
+              ...followsData,
+              followers: newFollowers,
+            };
+            await updateDoc(
+              doc(db, "follows", userToFollow!),
+              newFollowsData
+            ).then(() => getUserFollowsCount());
+
+            setIsFollowing(true);
+            setFollowedUsers((prevFollowedUsers) => [
+              ...prevFollowedUsers,
+              userToFollow!,
+            ]);
+          }
+        }
+
+        if (currentUserFollowsDoc.exists()) {
+          const currentUserFollowsData = currentUserFollowsDoc.data() as {
+            following: string[];
+          };
+
+          if (currentUserFollowsData.following.includes(userToFollow!)) {
+            const newFollowing = currentUserFollowsData.following.filter(
+              (followedUser) => followedUser !== userToFollow
+            );
+            const newFollowsData = {
+              ...currentUserFollowsData,
+              following: newFollowing,
+            };
+            await updateDoc(
+              doc(db, "follows", currentUID!),
+              newFollowsData
+            ).then(() => getUserFollowsCount());
+          } else {
+            const newFollowing = [
+              ...currentUserFollowsData.following,
+              userToFollow!,
+            ];
+            const newFollowsData = {
+              ...currentUserFollowsData,
+              following: newFollowing,
+            };
+            await updateDoc(
+              doc(db, "follows", currentUID!),
+              newFollowsData
+            ).then(() => getUserFollowsCount());
+            setFollowedUsers(newFollowsData.following);
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     getUserFollowsCount();
-    // getUserThreads();
     getUserData(localStorage.getItem("username")!);
   }, [userID]);
 
@@ -164,6 +269,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     loading,
     allUsers,
     userID,
+    followUser,
+    followedUsers,
+    isFollowing,
   };
 
   return (

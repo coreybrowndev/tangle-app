@@ -17,6 +17,7 @@ export interface ThreadData {
 }
 
 export interface UserData {
+  id: string;
   user_name: string;
   image: string;
   first_name: string;

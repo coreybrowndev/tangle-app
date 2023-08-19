@@ -1,12 +1,12 @@
 import React from "react";
 import "./userProfilePageStyles.scss";
 import { useUser } from "../../context/UserContext";
-import { MoreHorizontal, Settings } from "react-feather";
+import { MoreHorizontal } from "react-feather";
 import UserThreads from "../../components/profile-page-components/UserThreads";
 import SideBar from "../../components/side-bar/SideBar";
 
 const UserProfilePage = () => {
-  const { userData, userFollowsCount } = useUser();
+  const { userData, userFollowsCount, followUser, followedUsers } = useUser();
 
   return (
     <div className="profile-page-wrapper">
@@ -20,6 +20,15 @@ const UserProfilePage = () => {
               <h3>{userFollowsCount?.followers.length} followers</h3>
               <p>·</p>
               <h3>following {userFollowsCount?.following.length}</h3>
+            </div>
+            <div className="follow">
+              <button
+                onClick={() =>
+                  userData?.user_name && followUser(userData?.user_name)
+                }
+              >
+                {followedUsers.includes(userData?.id!) ? "Tangled" : "Tangle"}
+              </button>
             </div>
           </div>
           <div className="profile-page-header-image-action-items-wrapper">

@@ -20,6 +20,19 @@
             color: $dark-gray-color;
           }
         }
+        .follow {
+          display: flex;
+
+          button {
+            border: 1px solid $dark-gray-color;
+            outline: none;
+            padding: 0.5em 1.3em;
+            margin: 0;
+            height: fit-content;
+            border-radius: 0.5em;
+            font-size: 0.8rem;
+          }
+        }
       }
 
       .profile-page-header-image-action-items-wrapper {
